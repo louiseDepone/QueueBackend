@@ -1,5 +1,6 @@
 using System;
 using Backend.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Repository.RTicketDocument;
 
@@ -21,12 +22,16 @@ public class TicketDocumentRepository (QueueDbContext context) : ITicketDocument
 
     public TicketDocument? GetTicketDocumentById(int ticketDocumentId)
     {
-        return _context.TicketDocument.Find(ticketDocumentId);
+        return _context.TicketDocument.Include(
+            a => a.Document
+        ).FirstOrDefault(a => a.Id == ticketDocumentId);
     }
 
     public List<TicketDocument> GetTicketDocuments()
     {
-        return _context.TicketDocument.ToList();
+        return _context.TicketDocument.Include(
+            a => a.Document
+        ).ToList();
     }
 
     public void UpdateTicketDocument(TicketDocument ticketDocument)

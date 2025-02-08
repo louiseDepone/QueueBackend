@@ -2,9 +2,13 @@ using Backend;
 using Backend.Hub;
 using Backend.Repository.Department;
 using Backend.Repository.RDepartment;
+using Backend.Repository.RDocument;
+using Backend.Repository.RRole;
 using Backend.Repository.RTicket;
 using Backend.Repository.RTicketDocument;
 using Backend.Service.SDerpartment;
+using Backend.Service.SDocument;
+using Backend.Service.SRole;
 using Backend.Service.STicket;
 using Backend.Service.STicketDocument;
 using Microsoft.EntityFrameworkCore;
@@ -29,12 +33,21 @@ builder.Services.AddOpenApi();
 // Configure the HTTP request pipeline.
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+
 builder.Services.AddScoped<ITicketFinanceRepository, TicketFinanceRepository>();
 builder.Services.AddScoped<ITicketFinanceService, TicketFinanceService>();
+
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<ITicketService, TicketService>();
+
 builder.Services.AddScoped<ITicketDocumentRepository, TicketDocumentRepository>();
 builder.Services.AddScoped<ITicketDocumentService, TicketDocumentService>();
+
+builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
+builder.Services.AddScoped<IDocumentService, DocumentService>();
+
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IRoleService, RoleService>();
 
 
 
