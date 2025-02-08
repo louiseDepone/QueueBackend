@@ -33,6 +33,11 @@ builder.Services.AddScoped<ITicketFinanceRepository, TicketFinanceRepository>();
 builder.Services.AddScoped<ITicketFinanceService, TicketFinanceService>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<ITicketService, TicketService>();
+builder.Services.AddScoped<ITicketDocumentRepository, TicketDocumentRepository>();
+builder.Services.AddScoped<ITicketDocumentService, TicketDocumentService>();
+
+
+
 builder.Services.AddControllers();
 builder.Services.AddDbContext<QueueDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));

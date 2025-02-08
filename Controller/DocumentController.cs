@@ -1,6 +1,7 @@
 using Backend.DTO;
 using Backend.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Controller;
 
@@ -21,5 +22,12 @@ public class DocumentController(QueueDbContext context): ControllerBase
         _context.Document.Add(newDocument);
         await _context.SaveChangesAsync();
         return newDocument;
+    }
+
+    // get a;; documents
+    [HttpGet("GetDocuments")]
+    public async Task<ActionResult<List<Document>>> GetDocuments()
+    {
+        return await _context.Document.ToListAsync();
     }
 }
