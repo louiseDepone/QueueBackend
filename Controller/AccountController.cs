@@ -1,75 +1,101 @@
 using Backend.DTO;
 using Backend.Models;
+using Backend.Service.SAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Controller;
 [Route("[controller]")]
 [ApiController]
-public class AccountController(QueueDbContext context): ControllerBase
+public class AccountController(IAccountService accountService): ControllerBase
 {
-    private readonly QueueDbContext _context = context;
+    private readonly IAccountService _accountService = accountService;
     
-    [HttpGet("GetAllAccounts")]
-    public async Task<ActionResult<List<Account>>> GetAllAccounts()
+    [HttpGet("GetAccounts")]
+    public ActionResult<List<Account>> GetAccounts()
     {
-        var accounts = await _context.Account
-            .Include(a => a.Role)
-            .Include(a => a.Department)
-            .ToListAsync();
-        return Ok(accounts);
+        try
+        {
+            return Ok(_accountService.GetAccounts());
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+            throw;
+        }
     }
-    
-    [HttpPost("Register")]
-    public async Task<ActionResult<Account>> CreateAccount(CreateAccountDTO createdAccount)
+
+    [HttpGet("GetAccount/{id:int}")]
+    public ActionResult<Account> GetAccountById(int id)
     {
-        if (
-            string.IsNullOrEmpty(createdAccount.Email) ||
-            string.IsNullOrEmpty(createdAccount.Password) ||
-            string.IsNullOrEmpty(createdAccount.EmployeeId) ||
-            string.IsNullOrEmpty(createdAccount.LastName) ||
-            string.IsNullOrEmpty(createdAccount.FirstName) )
+        try
         {
-            return BadRequest("Invalid request");
+            return Ok(_accountService.GetAccountById(id));
         }
-        
-        
-        var department = await _context.Department.FirstOrDefaultAsync(
-            department => department.Id == createdAccount.DepartmentId
-        );
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+            throw;
+        }
+    }
 
-        if (department == null)
+    [HttpPost("AddAccount")]
+    public ActionResult AddAccount(CreateAccountDTO accountDTO)
+    {
+        try
         {
-            return BadRequest("Department not found");
+            _accountService.AddAccount(accountDTO);
+            return Ok("Account Successfully Added");
         }
-        var role = await _context.Role.FirstOrDefaultAsync(
-            role => role.Id == createdAccount.RoleId
-        );
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+            throw;
+        }
+    }
 
-        if (role == null)
+    [HttpPut("UpdateAccount/{id:int}")]
+    public ActionResult UpdateAccount(CreateAccountDTO accountDTO, int id)
+    {
+        try
         {
-            return BadRequest("Role not found");
+            _accountService.UpdateAccount(accountDTO, id);
+            return Ok("Account Successfully Updated");
         }
-        Account newAccount = new()
+        catch (Exception e)
         {
-            RoleId = createdAccount.RoleId,
-            DepartmentId = createdAccount.DepartmentId,
-            Email = createdAccount.Email,
-            Password = createdAccount.Password,
-            FirstName = createdAccount.FirstName,
-            LastName = createdAccount.LastName,
-            EmployeeId = createdAccount.EmployeeId,
-            TimeStamped = DateTime.UtcNow
-            
-        };
-        _context.Account.Add(newAccount);
-        await _context.SaveChangesAsync();
-        var createdAccountWithDetails = await _context.Account
-            .Include(a => a.Role)
-            .Include(a => a.Department)
-            .FirstOrDefaultAsync(a => a.Id == newAccount.Id);
-        
-        return Ok(newAccount);
+            return BadRequest(e.Message);
+            throw;
+        }
+    }
+
+    [HttpDelete("DeleteAccount/{id:int}")]
+    public ActionResult DeleteAccount(int id)
+    {
+        try
+        {
+            _accountService.DeleteAccount(id);
+            return Ok("Account Successfully Deleted");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+            throw;
+        }
+    }
+
+    [HttpGet("GetAccountsByRole/{roleId:int}")]
+    public ActionResult<List<Account>> GetAccountsByRole(int roleId)
+    {
+        try
+        {
+            return Ok(_accountService.GetAccountsByRole(roleId));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+            throw;
+        }
     }
 
 }

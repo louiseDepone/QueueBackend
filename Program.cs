@@ -1,11 +1,13 @@
 using Backend;
 using Backend.Hub;
 using Backend.Repository.Department;
+using Backend.Repository.RAccount;
 using Backend.Repository.RDepartment;
 using Backend.Repository.RDocument;
 using Backend.Repository.RRole;
 using Backend.Repository.RTicket;
 using Backend.Repository.RTicketDocument;
+using Backend.Service.SAccount;
 using Backend.Service.SDerpartment;
 using Backend.Service.SDocument;
 using Backend.Service.SRole;
@@ -49,6 +51,8 @@ builder.Services.AddScoped<IDocumentService, DocumentService>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 
 builder.Services.AddControllers();
