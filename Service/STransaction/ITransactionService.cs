@@ -10,4 +10,8 @@ public interface ITransactionService
     
     List<Transaction> GetTransactions();
     Transaction GetTransactionById(int id);
+
+    List<Transaction> GetTransactionsByDepartmentId(int departmentId);
+
+    List<Transaction> GetTransactionsByEmployeeId(int employeeId);
 }

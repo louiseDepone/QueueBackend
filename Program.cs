@@ -7,12 +7,14 @@ using Backend.Repository.RDocument;
 using Backend.Repository.RRole;
 using Backend.Repository.RTicket;
 using Backend.Repository.RTicketDocument;
+using Backend.Repository.RTransaction;
 using Backend.Service.SAccount;
 using Backend.Service.SDerpartment;
 using Backend.Service.SDocument;
 using Backend.Service.SRole;
 using Backend.Service.STicket;
 using Backend.Service.STicketDocument;
+using Backend.Service.STransaction;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -54,6 +56,9 @@ builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 
+
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<QueueDbContext>(options =>

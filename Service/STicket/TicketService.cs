@@ -56,6 +56,25 @@ public class TicketService(
         }
     }
 
+    public Ticket? GetTicketByNumberAssigned(int numberAssigned, int departmentId)
+    {
+        try
+        {
+            _departmentService.GetDepartmentById(departmentId);
+            var ticket =  _ticketRepository.GetTicketByNumberAssigned(numberAssigned, departmentId);
+            if (ticket == null)
+            {
+                throw new Exception("Ticket not found");
+            }
+            return ticket;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
     public void UpdateTicket(CreateTicketDTO ticket)
     {
         try

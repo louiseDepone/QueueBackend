@@ -13,4 +13,7 @@ public interface ITicketService
     List<Ticket> GetTickets();
     
     void UpdateStatus(string status,int id);
+
+    // get by NumberAssigned
+    Ticket GetTicketByNumberAssigned(int numberAssigned, int departmentId);
 }

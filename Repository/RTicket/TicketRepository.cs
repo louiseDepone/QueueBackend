@@ -27,7 +27,9 @@ public class TicketRepository(QueueDbContext context): ITicketRepository
 
     public Ticket? GetTicketById(int id)
     {
-        var ticket = _context.Ticket.Find(id);
+        var ticket = _context.Ticket.Include(
+                a => a.TicketFinance
+            ).Include(a => a.TicketDocument).Include(a => a.Department).FirstOrDefault(a => a.Id == id);
         return ticket;
     }
 
@@ -36,6 +38,13 @@ public class TicketRepository(QueueDbContext context): ITicketRepository
         return _context.Ticket.Include(
                 a => a.TicketFinance
             ).Include(a => a.TicketDocument).Include(a => a.Department).ToList();
+    }
+
+    public Ticket? GetTicketByNumberAssigned(int numberAssigned , int departmentId)
+    {
+        return _context.Ticket.Include(
+                a => a.TicketFinance
+            ).Include(a => a.TicketDocument).Include(a => a.Department).FirstOrDefault(a => a.NumberAssigned == numberAssigned && a.DepartmentId == departmentId);
     }
 
 
