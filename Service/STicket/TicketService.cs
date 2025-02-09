@@ -23,7 +23,7 @@ public class TicketService(
         try
         {
             if ( null == ticket.Departmentid || string.IsNullOrEmpty(ticket.StudentId) ||
-                ticket.NumberAssigned == null || string.IsNullOrEmpty(ticket.Email) )
+                ticket.NumberAssigned == null || string.IsNullOrEmpty(ticket.Email) || string.IsNullOrEmpty(ticket.CounterLocation) )
             {
                 throw new Exception("Ticket number assigned AND student Id not provided");
             }
@@ -35,6 +35,7 @@ public class TicketService(
                 StudentId = ticket.StudentId,
                 Status = "Pending",
                 Email = ticket.Email ,
+                CounterLocation = ticket.CounterLocation,
                 Creation = DateTime.UtcNow,
                 DepartmentId = ticket.Departmentid,
             };
@@ -56,12 +57,12 @@ public class TicketService(
         }
     }
 
-    public Ticket? GetTicketByNumberAssigned(int numberAssigned, int departmentId)
+    public Ticket? GetTicketByNumberAssigned(int numberAssigned, int departmentId, DateTime date)
     {
         try
         {
             _departmentService.GetDepartmentById(departmentId);
-            var ticket =  _ticketRepository.GetTicketByNumberAssigned(numberAssigned, departmentId);
+            var ticket =  _ticketRepository.GetTicketByNumberAssigned(numberAssigned, departmentId, date);
             if (ticket == null)
             {
                 throw new Exception("Ticket not found");

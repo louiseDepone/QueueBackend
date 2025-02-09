@@ -9,8 +9,9 @@ public class Ticket
     public long? NumberAssigned { get; set; }
     public string? StudentId { get; set; }
     public string? Email { get; set; }
+    public string? CounterLocation { get; set; }
     public string? Status { get; set; } // Pending, Cancelled , Success
-    public DateTime? Creation { get; set; }
+    public DateTime Creation { get; set; }
     
     [ForeignKey("TicketDocument")]
     public int? TicketDocumentId { get; set; }

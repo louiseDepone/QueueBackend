@@ -2,6 +2,7 @@ using Backend;
 using Backend.Hub;
 using Backend.Repository.Department;
 using Backend.Repository.RAccount;
+using Backend.Repository.RCounter;
 using Backend.Repository.RDepartment;
 using Backend.Repository.RDocument;
 using Backend.Repository.RRole;
@@ -9,6 +10,7 @@ using Backend.Repository.RTicket;
 using Backend.Repository.RTicketDocument;
 using Backend.Repository.RTransaction;
 using Backend.Service.SAccount;
+using Backend.Service.SCounter;
 using Backend.Service.SDerpartment;
 using Backend.Service.SDocument;
 using Backend.Service.SRole;
@@ -59,6 +61,10 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
+
+// ADD COOUNTER REPOSITORY AND SERVICE
+builder.Services.AddScoped<ICounterRepository, CounterRepository>();
+builder.Services.AddScoped<ICounterService, CounterService>();
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<QueueDbContext>(options =>

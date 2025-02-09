@@ -11,4 +11,5 @@ public class CreateTicketDTO
     }
     public CreateTicketFinanceDTO? TicketFinance { get; set; }
     public int Departmentid { get; set; }
+    public string? CounterLocation { get; set; }
 }

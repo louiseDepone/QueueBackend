@@ -40,11 +40,14 @@ public class TicketRepository(QueueDbContext context): ITicketRepository
             ).Include(a => a.TicketDocument).Include(a => a.Department).ToList();
     }
 
-    public Ticket? GetTicketByNumberAssigned(int numberAssigned , int departmentId)
+    public Ticket? GetTicketByNumberAssigned(int numberAssigned , int departmentId, DateTime date)
     {
-        return _context.Ticket.Include(
+        // convert the DateTime to DateOnly
+
+        var ticket = _context.Ticket.Include(
                 a => a.TicketFinance
-            ).Include(a => a.TicketDocument).Include(a => a.Department).FirstOrDefault(a => a.NumberAssigned == numberAssigned && a.DepartmentId == departmentId);
+            ).Include(a => a.TicketDocument).Include(a => a.Department).FirstOrDefault(a => a.NumberAssigned == numberAssigned && a.DepartmentId == departmentId && a.Creation.Date == date.Date);
+        return ticket;
     }
 
 

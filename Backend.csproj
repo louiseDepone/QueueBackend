@@ -21,4 +21,8 @@
         <PackageReference Include="Scalar.AspNetCore" Version="2.0.11" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Service/SHub/" />
+    </ItemGroup>
+
 </Project>
