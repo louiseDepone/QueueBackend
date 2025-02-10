@@ -13,6 +13,22 @@ IDepartmentService departmentService
     private readonly ICounterRepository _counterRepository = counterRepository;
     private readonly IDepartmentService _departmentService = departmentService;
 
+    public void UpdateCounterTicket(int counterId, int? ticketId)
+    {
+        try
+        {
+                var counter = GetCounterById(counterId);
+                counter.CurrentTicketId = ticketId;
+                _counterRepository.UpdateCounter(counter);
+            
+        }
+        catch (Exception e)
+        {
+            
+            throw;
+        }
+    }
+
 
     public void AddCounter(CreateCounterDTO counter)
     {
@@ -74,6 +90,22 @@ IDepartmentService departmentService
             throw;
         }
     }
+
+    public Counter UpdateCounterAvailability(int id, bool status){
+        try
+        {
+            var counter = GetCounterById(id);
+            counter.IsActive = status;
+            return _counterRepository.UpdateCounter(counter);
+
+        }
+        catch (Exception e)
+        {
+            
+            throw;
+        }
+    }
+
 
     public void DeleteCounter( int id)
     {

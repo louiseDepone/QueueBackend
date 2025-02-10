@@ -9,7 +9,7 @@ public interface ICounterService
     void AddCounter(CreateCounterDTO counter);
     void UpdateCounter(CreateCounterDTO counter, int id);
     void DeleteCounter( int id);
-    
+    Counter UpdateCounterAvailability(int id, bool status);
     Counter? GetCounterById(int id);
 
     List<Counter> GetCounters();
@@ -18,4 +18,6 @@ public interface ICounterService
     
     Counter GetCounterByNameAndLocation(string name, string location, int departmentId);
     List<Counter> GetCounterByLocation(int departmentId, string location);
+
+    void UpdateCounterTicket(int counterId, int? ticketId);
 }

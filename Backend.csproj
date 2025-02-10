@@ -22,7 +22,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Service/SHub/" />
+      <Folder Include="Service/SHub/SOnlineAccount/" />
+      <Folder Include="Service/SHub/STrackTicket/" />
     </ItemGroup>
 
 </Project>

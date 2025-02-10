@@ -27,7 +27,7 @@ public class TransactionService(
             _accountService.GetAccountById(transaction.TransactedBy);
             // today date
 
-            var ticket =_ticketService.GetTicketByNumberAssigned(transaction.TicketNumber, transaction.DepartmentId, DateTime.UtcNow);
+            var ticket =_ticketService.GetTicketByNumberAssigned(transaction.TicketNumber, transaction.DepartmentId, DateTime.UtcNow, transaction.Location);
             if (ticket.Status == "Completed")
             {
                 throw new Exception("Ticket already completed");
@@ -37,6 +37,7 @@ public class TransactionService(
             {
                 DepartmentId = transaction.DepartmentId,
                 TransactedBy = transaction.TransactedBy,
+                Location = transaction.Location,
                 TicketId = ticket.Id,
                 TimeStamp = DateTime.UtcNow
             };

@@ -57,12 +57,12 @@ public class TicketService(
         }
     }
 
-    public Ticket? GetTicketByNumberAssigned(int numberAssigned, int departmentId, DateTime date)
+    public Ticket? GetTicketByNumberAssigned(int numberAssigned, int departmentId, DateTime date, string location)
     {
         try
         {
             _departmentService.GetDepartmentById(departmentId);
-            var ticket =  _ticketRepository.GetTicketByNumberAssigned(numberAssigned, departmentId, date);
+            var ticket =  _ticketRepository.GetTicketByNumberAssigned(numberAssigned, departmentId, date, location);
             if (ticket == null)
             {
                 throw new Exception("Ticket not found");
@@ -142,6 +142,20 @@ public class TicketService(
             var ticket = _ticketRepository.GetTicketById(id);
             ticket.Status = status;
             _ticketRepository.UpdateTicket(ticket);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public List<Ticket> GetPendingTickets(int departmentId, DateTime date, string location)
+    {
+        try
+        {
+            _departmentService.GetDepartmentById(departmentId);
+            return _ticketRepository.GetPendingTickets(departmentId, date, location);
         }
         catch (Exception e)
         {

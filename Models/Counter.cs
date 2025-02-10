@@ -8,9 +8,11 @@ public class Counter
     public string? Name { get; set; }
     public string? Location { get; set; }
     public string? Type { get; set; }
+
+    public bool? IsActive { get; set; } = false ; // Active, Inactive
     
     [ForeignKey("Department")]
-    public int? DepartmentId { get; set; }
+    public int DepartmentId { get; set; }
     public Department? Department { get; set; }
     
     [ForeignKey("CurrentTicket")]

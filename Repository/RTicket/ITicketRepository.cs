@@ -12,6 +12,8 @@ public interface ITicketRepository
     Ticket? GetTicketById(int id);
     List<Ticket> GetTickets();
     
-    Ticket GetTicketByNumberAssigned(int numberAssigned, int departmentId, DateTime date);
+    Ticket GetTicketByNumberAssigned(int numberAssigned, int departmentId, DateTime date, string location);
+
+    List<Ticket> GetPendingTickets(int departmentId, DateTime date, string location);
     
 }

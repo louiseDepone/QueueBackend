@@ -15,5 +15,8 @@ public interface ITicketService
     void UpdateStatus(string status,int id);
 
     // get by NumberAssigned
-    Ticket GetTicketByNumberAssigned(int numberAssigned, int departmentId, DateTime date);
+    Ticket GetTicketByNumberAssigned(int numberAssigned, int departmentId, DateTime date, string location);
+
+
+    List<Ticket> GetPendingTickets(int departmentId, DateTime date, string location);
 }

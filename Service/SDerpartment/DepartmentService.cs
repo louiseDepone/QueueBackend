@@ -56,6 +56,20 @@ public class DepartmentService(IDepartmentRepository departmentRepository): IDep
         }
     }
 
+    public void UpdateDepartmentCurrentNumber(int departmentId, long? currentNumber)
+    {
+        try
+        {
+            var department = GetDepartmentById(departmentId);
+            department.CurrentTicketNumber = currentNumber;
+            _departmentRepository.UpdateDepartment(department);
+        }
+        catch (Exception e)
+        {
+            throw;
+        }
+    }
+
     public void DeleteDepartment(int departmentId)
     {
         var department = GetDepartmentById(departmentId);

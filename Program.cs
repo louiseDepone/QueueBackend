@@ -13,6 +13,7 @@ using Backend.Service.SAccount;
 using Backend.Service.SCounter;
 using Backend.Service.SDerpartment;
 using Backend.Service.SDocument;
+using Backend.Service.SHub.SActiveCounter;
 using Backend.Service.SRole;
 using Backend.Service.STicket;
 using Backend.Service.STicketDocument;
@@ -82,6 +83,6 @@ app.UseWebSockets();  // ✅ Enable WebSockets
 app.UseHttpsRedirection();
 app.MapControllers();
 app.MapHub<OnlineAccountHub>("/onlineaccounts-hub");
-app.MapHub<ActiveCounterHub>("/activecounter-hub");
+app.MapHub<ActiveCounter>("/activecounter-hub");
 
 app.Run();

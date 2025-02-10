@@ -6,6 +6,10 @@ public class Transaction
 {
     public int Id { get; set; }
     public DateTime TimeStamp { get; set; }
+
+    public string? Location { get; set; }
+
+
     
     [ForeignKey("Account")]
     public int? TransactedBy { get; set; }

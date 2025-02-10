@@ -7,6 +7,7 @@ public interface IDepartmentService
 {
     void  AddDepartment(CreateDepartmentDTO newDepartment);
     void UpdateDepartment(CreateDepartmentDTO department, int departmentId);
+    void UpdateDepartmentCurrentNumber(int departmentId, long? currentNumber);
     void DeleteDepartment(int departmentId);
     
     Department GetDepartmentById(int departmentId);
