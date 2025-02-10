@@ -90,12 +90,13 @@ public class TicketService(
         }
     }
 
-    public void DeleteTicket(CreateTicketDTO ticket)
+    public void DeleteTicket(int ticket)
     {
         try
         {
+            var ticketToDelete = GetTicketById(ticket);
+            _ticketRepository.DeleteTicket(ticketToDelete);
 
-            throw new NotImplementedException();
         }
         catch (Exception e)
         {

@@ -53,4 +53,20 @@ public class TicketController(ITicketService ticketService):ControllerBase
             throw;
         }
     }
+
+    // DELETE
+    [HttpDelete("DeleteTicket/{id:int}")]
+    public async Task<ActionResult> DeleteTicket(int id)
+    {
+        try
+        {
+            _ticketService.DeleteTicket(id);
+            return Ok("Ticket Successfully Deleted");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+            throw;
+        }
+    }
 }

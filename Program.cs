@@ -29,7 +29,7 @@ builder.Services.AddSignalR();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
-        policy => policy.WithOrigins("http://localhost:5173")
+        policy => policy.WithOrigins("http://localhost:5174")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials());
@@ -63,7 +63,6 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 
-// ADD COOUNTER REPOSITORY AND SERVICE
 builder.Services.AddScoped<ICounterRepository, CounterRepository>();
 builder.Services.AddScoped<ICounterService, CounterService>();
 

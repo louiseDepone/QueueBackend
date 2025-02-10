@@ -7,7 +7,7 @@ public interface ITicketService
 {
     void AddTicket(CreateTicketDTO ticket);
     void UpdateTicket(CreateTicketDTO ticket);
-    void DeleteTicket(CreateTicketDTO ticket);
+    void DeleteTicket(int ticket);
     
     Ticket? GetTicketById(int id);
     List<Ticket> GetTickets();

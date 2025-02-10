@@ -23,6 +23,7 @@ public class TicketRepository(QueueDbContext context): ITicketRepository
     public void DeleteTicket(Ticket ticket)
     {
         _context.Ticket.Remove(ticket);
+        _context.SaveChanges();
     }
 
     public Ticket? GetTicketById(int id)

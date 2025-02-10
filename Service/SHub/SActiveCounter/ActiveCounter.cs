@@ -2,7 +2,7 @@ using System;
 
 namespace Backend.Service.SHub.SActiveCounter;
 
-using System.Text.RegularExpressions;
+
 using Backend.DTO;
 using Backend.Service.SAccount;
 using Backend.Service.SCounter;
@@ -61,34 +61,43 @@ public class ActiveCounter
     {
         var counter = _counterService.UpdateCounterAvailability(counterId, true);
         var currentNumberOfDepartment = _departmentService.GetDepartmentById(counter.DepartmentId);
-        var allCounterLocation = _counterService.GetCounterByLocation(counter.DepartmentId, counter.Location);
+        var   allCounterLocation = _counterService.GetCounterByLocation(counter.DepartmentId, counter.Location);
         var allcounterDepartment = _counterService.GetCounterByDepartmentId(counter.DepartmentId);
-        var allcounters = _counterService.GetCounters();
+        
 
         // GET ALL THE TICKET BASE ON THE NUMBER
-        var nextTicket = _ticketService.GetPendingTickets(counter.DepartmentId, 
-            DateTime.UtcNow ,counter.Location).First();
+        var TICKETlINEDuP = _ticketService.GetPendingTickets(counter.DepartmentId,
+            DateTime.UtcNow, counter.Location);
 
-        if(nextTicket != null)
+        if (TICKETlINEDuP.Count < 1)
         {
+            await Clients.Caller.SendAsync("getcounternumber", null);
+            _departmentService.UpdateDepartmentCurrentNumber(currentNumberOfDepartment.Id, 0);
+            _counterService.UpdateCounterTicket(counterId, null);
+            
+        }
+        if (TICKETlINEDuP.Count > 0)
+        {
+            var nextTicket = _ticketService.GetPendingTickets(counter.DepartmentId, DateTime.UtcNow, counter.Location).First();
             _ticketService.UpdateStatus("Processing", nextTicket.Id);
             _departmentService.UpdateDepartmentCurrentNumber(currentNumberOfDepartment.Id, nextTicket.NumberAssigned);
             _counterService.UpdateCounterTicket(counterId, nextTicket.Id);
+            await Clients.Caller.SendAsync("getcounternumber", nextTicket);
         }
-
+        var allcounters = _counterService.GetCounters();
         await Clients.Group(currentNumberOfDepartment.Name).SendAsync("getdepartmentticketnumber", currentNumberOfDepartment.CurrentTicketNumber);
-        await Clients.Caller.SendAsync("getcounternumber", nextTicket);
         await Clients.Group(currentNumberOfDepartment.Name + counter.Location).SendAsync("getlocationcounter", allCounterLocation);
         await Clients.Group(currentNumberOfDepartment.Name).SendAsync("getdepartmentcounter", allcounterDepartment);
         await Clients.All.SendAsync("getallcounter", allcounters);
     }
 
-    public async Task CompleteTicket (int accountId, int counterId, int ticketId)
+    public async Task CompleteTicket(int accountId, int counterId, int ticketId)
     {
         var account = _accountService.GetAccountById(accountId);
         var counter = _counterService.GetCounterById(counterId);
 
-        var transaction = new CreateTransactionDTO(){
+        var transaction = new CreateTransactionDTO()
+        {
             DepartmentId = counter.DepartmentId,
             Location = counter.Location,
             TicketNumber = ticketId,
@@ -96,8 +105,24 @@ public class ActiveCounter
         };
 
         _transactionService.AddTransaction(transaction);
-        
 
+
+    }
+
+    public async Task CloseCounter(int counterId)
+    {
+        var counter = _counterService.UpdateCounterAvailability(counterId, false);
+        var currentNumberOfDepartment = _departmentService.GetDepartmentById(counter.DepartmentId);
+        var allCounterLocation = _counterService.GetCounterByLocation(counter.DepartmentId, counter.Location);
+        var allcounterDepartment = _counterService.GetCounterByDepartmentId(counter.DepartmentId);
+        var allcounters = _counterService.GetCounters();
+
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, currentNumberOfDepartment.Name + counter.Location);
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, currentNumberOfDepartment.Name);
+
+        await Clients.Group(currentNumberOfDepartment.Name + counter.Location).SendAsync("getlocationcounter", allCounterLocation);
+        await Clients.Group(currentNumberOfDepartment.Name).SendAsync("getdepartmentcounter", allcounterDepartment);
+        await Clients.All.SendAsync("getallcounter", allcounters);
     }
 
 }
