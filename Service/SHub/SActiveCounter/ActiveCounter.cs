@@ -37,18 +37,19 @@ public class ActiveCounter
         var allCounterLocation = _counterService.GetCounterByLocation(counter.DepartmentId, counter.Location);
         var allcounterDepartment = _counterService.GetCounterByDepartmentId(counter.DepartmentId);
         var allcounters = _counterService.GetCounters();
+        // GET ALL THE TICKET BASE ON THE NUMBER
+        var TICKETlINEDuP = _ticketService.GetPendingTickets(counter.DepartmentId,
+            DateTime.UtcNow, counter.Location);
 
         if (currentNumberOfDepartment.CurrentTicketNumber == null)
         {
             _departmentService.UpdateDepartmentCurrentNumber(currentNumberOfDepartment.Id, 0);
 
         }
-        // update counter
-
 
         await Groups.AddToGroupAsync(Context.ConnectionId, currentNumberOfDepartment.Name + counter.Location);
         await Groups.AddToGroupAsync(Context.ConnectionId, currentNumberOfDepartment.Name);
-
+        await Clients.Group(currentNumberOfDepartment.Name + counter.Location).SendAsync("getnextfivetickets", TICKETlINEDuP.Count > 5 ? TICKETlINEDuP.GetRange(0, 5) : TICKETlINEDuP);
         await Clients.Group(currentNumberOfDepartment.Name + counter.Location).SendAsync("getlocationcounter", allCounterLocation);
         await Clients.Caller.SendAsync("getcounternumber", 0);
         await Clients.Group(currentNumberOfDepartment.Name).SendAsync("getdepartmentticketnumber", currentNumberOfDepartment.CurrentTicketNumber);
@@ -66,15 +67,11 @@ public class ActiveCounter
         
 
         // GET ALL THE TICKET BASE ON THE NUMBER
-        var TICKETlINEDuP = _ticketService.GetPendingTickets(counter.DepartmentId,
-            DateTime.UtcNow, counter.Location);
+        var TICKETlINEDuP = _ticketService.GetPendingTickets(counter.DepartmentId, DateTime.UtcNow, counter.Location);
 
         if (TICKETlINEDuP.Count < 1)
         {
-            await Clients.Caller.SendAsync("getcounternumber", null);
-            _departmentService.UpdateDepartmentCurrentNumber(currentNumberOfDepartment.Id, 0);
             _counterService.UpdateCounterTicket(counterId, null);
-            
         }
         if (TICKETlINEDuP.Count > 0)
         {
@@ -82,9 +79,10 @@ public class ActiveCounter
             _ticketService.UpdateStatus("Processing", nextTicket.Id);
             _departmentService.UpdateDepartmentCurrentNumber(currentNumberOfDepartment.Id, nextTicket.NumberAssigned);
             _counterService.UpdateCounterTicket(counterId, nextTicket.Id);
-            await Clients.Caller.SendAsync("getcounternumber", nextTicket);
         }
         var allcounters = _counterService.GetCounters();
+        await Clients.Caller.SendAsync("getcounternumber", TICKETlINEDuP.Count > 0 ? TICKETlINEDuP.First() : null);
+        await Clients.Group(currentNumberOfDepartment.Name + counter.Location).SendAsync("getnextfivetickets", TICKETlINEDuP.Count > 5 ? TICKETlINEDuP.GetRange(0, 5) : TICKETlINEDuP);
         await Clients.Group(currentNumberOfDepartment.Name).SendAsync("getdepartmentticketnumber", currentNumberOfDepartment.CurrentTicketNumber);
         await Clients.Group(currentNumberOfDepartment.Name + counter.Location).SendAsync("getlocationcounter", allCounterLocation);
         await Clients.Group(currentNumberOfDepartment.Name).SendAsync("getdepartmentcounter", allcounterDepartment);

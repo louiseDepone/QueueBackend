@@ -6,7 +6,7 @@ namespace Backend.Service.STicket;
 public interface ITicketService
 {
     void AddTicket(CreateTicketDTO ticket);
-    void UpdateTicket(CreateTicketDTO ticket);
+    void UpdateTicket(CreateTicketDTO ticket, int id);
     void DeleteTicket(int ticket);
     
     Ticket? GetTicketById(int id);

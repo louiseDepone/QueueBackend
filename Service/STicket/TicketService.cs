@@ -76,12 +76,29 @@ public class TicketService(
         }
     }
 
-    public void UpdateTicket(CreateTicketDTO ticket)
+    public void UpdateTicket(CreateTicketDTO ticket, int ticketId)
     {
         try
         {
+            if ( null == ticket.Departmentid || string.IsNullOrEmpty(ticket.StudentId) ||
+                ticket.NumberAssigned == null || string.IsNullOrEmpty(ticket.Email) || string.IsNullOrEmpty(ticket.CounterLocation) )
+            {
+                throw new Exception("Ticket number assigned AND student Id not provided");
+            }
 
-            throw new NotImplementedException();
+            _departmentService.GetDepartmentById(ticket.Departmentid);
+            var ticketToUpdate = GetTicketById(ticketId);
+            ticketToUpdate.NumberAssigned = ticket.NumberAssigned;
+            ticketToUpdate.StudentId = ticket.StudentId;
+            ticketToUpdate.Email = ticket.Email;
+            ticketToUpdate.CounterLocation = ticket.CounterLocation;
+            ticketToUpdate.DepartmentId = ticket.Departmentid;
+            ticketToUpdate.Creation = DateTime.UtcNow;
+
+            
+            // DONT FORGET THE DOCUMENT GAGI 
+            
+            _ticketRepository.UpdateTicket(ticketToUpdate);
         }
         catch (Exception e)
         {

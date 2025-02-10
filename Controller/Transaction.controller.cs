@@ -12,7 +12,7 @@ namespace Backend.Controller
     {
         private readonly ITransactionService _transactionService = transactionService;
 
-        [HttpPost]
+        [HttpPost("AddTransaction")]
         public IActionResult AddTransaction(CreateTransactionDTO transaction)
         {
             try
@@ -26,7 +26,7 @@ namespace Backend.Controller
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("DeleteTransaction")]
         public IActionResult DeleteTransaction(Transaction transaction)
         {
             try
@@ -40,7 +40,7 @@ namespace Backend.Controller
             }
         }
 
-        [HttpGet]
+        [HttpGet("GetallTransactions")]
         public IActionResult GetTransactions()
         {
             try

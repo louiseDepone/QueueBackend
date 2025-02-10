@@ -20,7 +20,6 @@ IDepartmentService departmentService
                 var counter = GetCounterById(counterId);
                 counter.CurrentTicketId = ticketId;
                 _counterRepository.UpdateCounter(counter);
-            
         }
         catch (Exception e)
         {

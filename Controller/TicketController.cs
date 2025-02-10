@@ -69,4 +69,39 @@ public class TicketController(ITicketService ticketService):ControllerBase
             throw;
         }
     }
+
+    // updatee 
+    [HttpPut("UpdateTicket/{id:int}")]
+    public async Task<ActionResult> UpdateTicket(CreateTicketDTO ticketDto, int id)
+    {
+        try
+        {
+            _ticketService.UpdateTicket(ticketDto, id);
+            return Ok("Ticket Successfully Updated");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+            throw;
+        }
+    }
+
+    // updateing status ticket
+    [HttpPut("UpdateTicketStatus/")]
+    public async Task<ActionResult> UpdateTicketStatus(string status, int[] ids)
+    {
+        try
+        {
+            foreach (var id in ids)
+            {
+                _ticketService.UpdateStatus(status, id);
+            }
+            return Ok("Ticket Status Successfully Updated");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+            throw;
+        }
+    }
 }
