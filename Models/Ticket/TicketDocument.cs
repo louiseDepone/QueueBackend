@@ -8,7 +8,7 @@ public class TicketDocument
     public int Id { get; set; }
     
     [ForeignKey("Document")]
-    public int? TypeOfDocument { get; set; }
+    public int TypeOfDocument { get; set; }
     public Document? Document { get; set; }
     
     [JsonIgnore]

@@ -13,6 +13,7 @@ using Backend.Service.SAccount;
 using Backend.Service.SCounter;
 using Backend.Service.SDerpartment;
 using Backend.Service.SDocument;
+using Backend.Service.SEmail;
 using Backend.Service.SHub.SActiveCounter;
 using Backend.Service.SRole;
 using Backend.Service.STicket;
@@ -22,14 +23,14 @@ using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddSingleton<EmailService>();
 // Add services to the container.
 builder.Services.AddOpenApi();
 builder.Services.AddSignalR();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
-        policy => policy.WithOrigins("http://localhost:5174")
+        policy => policy.WithOrigins("http://localhost:5173")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials());
@@ -76,6 +77,8 @@ if (app.Environment.IsDevelopment())
 {
     app.MapScalarApiReference();
     app.MapOpenApi();
+        //The default HSTS value is 30 days. Y; -only for 30 days@@ https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
 }
 app.UseWebSockets();  // ✅ Enable WebSockets
 

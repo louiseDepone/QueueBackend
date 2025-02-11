@@ -22,7 +22,7 @@ public class Ticket
     public TicketDocument? TicketDocument { get; set; }
     
     [ForeignKey("Department")]
-    public int? DepartmentId { get; set; }
+    public int DepartmentId { get; set; }
     public Department? Department { get; set; }
     
     [JsonIgnore]

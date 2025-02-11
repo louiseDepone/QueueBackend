@@ -95,6 +95,18 @@ public class TicketController(ITicketService ticketService):ControllerBase
             foreach (var id in ids)
             {
                 _ticketService.UpdateStatus(status, id);
+                var byId = _ticketService.GetTicketById(id);
+               
+                _ticketService.UpdateTicket(new()
+                {
+                    NumberAssigned = (int) byId.NumberAssigned,
+                    StudentId = byId.StudentId,
+                    Email = "louisedepone@gmail.com",
+                    TicketDocument = null,
+                    TicketFinance = null,
+                    Departmentid = byId.DepartmentId,
+                    CounterLocation = byId.CounterLocation
+                    },byId.Id);
             }
             return Ok("Ticket Status Successfully Updated");
         }

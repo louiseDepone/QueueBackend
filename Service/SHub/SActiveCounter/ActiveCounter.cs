@@ -9,13 +9,15 @@ using Backend.Service.SCounter;
 using Backend.Service.SDerpartment;
 using Backend.Service.STicket;
 using Backend.Service.STransaction;
+using Backend.Service.SEmail;
 using Microsoft.AspNetCore.SignalR;
 public class ActiveCounter
     (ICounterService counterService,
         IDepartmentService departmentService,
         ITicketService ticketService,
         ITransactionService transactionService,
-        IAccountService accountService
+        IAccountService accountService,
+        EmailService emailService
     ) : Hub
 {
     private readonly ICounterService _counterService = counterService;
@@ -23,6 +25,7 @@ public class ActiveCounter
     private readonly ITicketService _ticketService = ticketService;
     private readonly ITransactionService _transactionService = transactionService;
     private readonly IAccountService _accountService = accountService;
+    private readonly EmailService _emailService = emailService;
     public override async Task OnConnectedAsync()
     {
         var allcounters = _counterService.GetCounters();
@@ -55,6 +58,7 @@ public class ActiveCounter
         await Clients.Group(currentNumberOfDepartment.Name).SendAsync("getdepartmentticketnumber", currentNumberOfDepartment.CurrentTicketNumber);
         await Clients.Group(currentNumberOfDepartment.Name).SendAsync("getdepartmentcounter", allcounterDepartment);
         await Clients.All.SendAsync("getallcounter", allcounters);
+
     }
 
     // next ticket
@@ -79,9 +83,20 @@ public class ActiveCounter
             _ticketService.UpdateStatus("Processing", nextTicket.Id);
             _departmentService.UpdateDepartmentCurrentNumber(currentNumberOfDepartment.Id, nextTicket.NumberAssigned);
             _counterService.UpdateCounterTicket(counterId, nextTicket.Id);
+
+
+            if(TICKETlINEDuP.Count > 5)
+            {
+                // get the 5th ticket
+                var fifthticket = TICKETlINEDuP[4];
+                if (fifthticket.Email != null)
+                {
+                    await _emailService.SendEmailAsync(fifthticket.Email, $"{currentNumberOfDepartment.Name} Your Turn", "Your Turn is coming soon");
+                }
+            }
         }
         var allcounters = _counterService.GetCounters();
-        await Clients.Caller.SendAsync("getcounternumber", TICKETlINEDuP.Count > 0 ? TICKETlINEDuP.First() : null);
+        await Clients.Caller.SendAsync("getcounternumber", TICKETlINEDuP.Count > 0 ? TICKETlINEDuP[0] : null);
         await Clients.Group(currentNumberOfDepartment.Name + counter.Location).SendAsync("getnextfivetickets", TICKETlINEDuP.Count > 5 ? TICKETlINEDuP.GetRange(0, 5) : TICKETlINEDuP);
         await Clients.Group(currentNumberOfDepartment.Name).SendAsync("getdepartmentticketnumber", currentNumberOfDepartment.CurrentTicketNumber);
         await Clients.Group(currentNumberOfDepartment.Name + counter.Location).SendAsync("getlocationcounter", allCounterLocation);
@@ -102,9 +117,10 @@ public class ActiveCounter
             TransactedBy = accountId
         };
 
-        _transactionService.AddTransaction(transaction);
-
-
+    
+        if (counter.CurrentTicket?.Email != null)
+            { await _emailService.SendEmailAsync(counter.CurrentTicket?.Email, $"Your transaction Is Succefully Completer", "Your transaction is successfully completed");
+            }
     }
 
     public async Task CloseCounter(int counterId)
